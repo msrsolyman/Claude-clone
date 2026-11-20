@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import { Artifact } from '@/types/chat';
-import { AlertCircle, RefreshCw } from 'lucide-react';
+import { AlertCircle } from 'lucide-react';
 
 interface SandboxedRunnerProps {
   artifact: Artifact;
@@ -11,7 +11,7 @@ interface SandboxedRunnerProps {
 export function SandboxedRunner({ artifact }: SandboxedRunnerProps) {
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [, setLoading] = useState(true);
 
   const generateSrcDoc = () => {
     const isReact = artifact.type === 'react' || artifact.language === 'tsx' || artifact.language === 'jsx';
@@ -70,8 +70,10 @@ export function SandboxedRunner({ artifact }: SandboxedRunnerProps) {
           <script>
             window.onerror = function(msg, url, line, col, err) {
               var errDiv = document.getElementById('error-root');
-              errDiv.style.display = 'block';
-              errDiv.innerText = 'Runtime Error: ' + msg + (line ? ' (Line ' + line + ')' : '');
+              if (errDiv) {
+                errDiv.style.display = 'block';
+                errDiv.innerText = 'Runtime Error: ' + msg + (line ? ' (Line ' + line + ')' : '');
+              }
               window.parent.postMessage({ type: 'ARTIFACT_ERROR', error: msg }, '*');
               return true;
             };
@@ -80,11 +82,13 @@ export function SandboxedRunner({ artifact }: SandboxedRunnerProps) {
           <script type="text/babel" data-presets="react,typescript">
             const { useState, useEffect, useRef, useMemo, useCallback } = React;
 
-            // Raw code injection with fallback export wrapper
             try {
               ${sanitizeReactCode(artifact.content)}
 
-              const ComponentToRender = typeof App !== 'undefined' ? App : (typeof Component !== 'undefined' ? Component : null);
+              const ComponentToRender = 
+                (typeof App !== 'undefined' ? App : null) ||
+                (typeof window !== 'undefined' && window.App ? window.App : null) ||
+                (typeof Component !== 'undefined' ? Component : null);
 
               if (ComponentToRender) {
                 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -94,8 +98,10 @@ export function SandboxedRunner({ artifact }: SandboxedRunnerProps) {
               }
             } catch (err) {
               const errDiv = document.getElementById('error-root');
-              errDiv.style.display = 'block';
-              errDiv.innerText = 'Compilation Error: ' + err.message;
+              if (errDiv) {
+                errDiv.style.display = 'block';
+                errDiv.innerText = 'Compilation Error: ' + err.message;
+              }
               window.parent.postMessage({ type: 'ARTIFACT_ERROR', error: err.message }, '*');
             }
           </script>
@@ -141,10 +147,20 @@ export function SandboxedRunner({ artifact }: SandboxedRunnerProps) {
 }
 
 function sanitizeReactCode(code: string): string {
-  // Strip standard module imports and exports so code executes standalone
-  return code
-    .replace(/import\s+[\s\S]*?from\s+['"][^'"]+['"];?/g, '')
-    .replace(/export\s+default\s+function\s+([A-Za-z0-9_]+)/g, 'function $1; window.App = $1; function App')
-    .replace(/export\s+default\s+([A-Za-z0-9_]+);?/g, 'window.App = $1;')
-    .replace(/export\s+/g, '');
+  // Strip import statements
+  let clean = code.replace(/import\s+[\s\S]*?from\s+['"][^'"]+['"];?/g, '');
+
+  // Replace "export default function [Name]" -> "function [Name]"
+  clean = clean.replace(/export\s+default\s+function(?:\s+([A-Za-z0-9_$]+))?/g, (_, name) => {
+    const fnName = name || 'App';
+    return `function ${fnName}`;
+  });
+
+  // Replace "export default [Name];" -> "window.App = [Name];"
+  clean = clean.replace(/export\s+default\s+([A-Za-z0-9_$]+);?/g, 'window.App = $1;');
+
+  // Remove any remaining "export "
+  clean = clean.replace(/export\s+/g, '');
+
+  return clean;
 }
