@@ -1,0 +1,17 @@
+{
+  "name": "Atelier",
+  "tagline": "The local-first AI workbench with interactive artifacts and multi-model freedom.",
+  "avoid": [
+    "Claude",
+    "Claude.ai"
+  ],
+  "domains": [
+    "claude.ai"
+  ],
+  "colors": [
+    "#cc785c",
+    "#d97757",
+    "#c15f3e",
+    "#b54a27"
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "avoid": [
+    "Claude",
+    "Claude.ai"
+  ],
+  "app_store": {
+    "name": "Atelier: AI Artifact Studio",
+    "subtitle": "Interactive Code & Prototyping",
+    "promotional_text": "Run interactive code artifacts live. Bring your own model keys with local privacy and multi-provider flexibility.",
+    "description": "Atelier is a local-first workbench for developers and creators who build with AI.\n\nTurn prompts into working interactive prototypes. Inspect code side-by-side with a live React and HTML preview sandbox.\n\nKey Capabilities:\n- Interactive Artifacts: Live execution for React, Tailwind, and SVG components\n- Bring Your Own Key: Connect your preferred model providers with zero artificial rate limits\n- Multi-Model Freedom: Choose between high-intelligence reasoning and high-speed execution\n- Local-First Privacy: Keep your sessions and data stored securely on your device\n- One-Click Export: Download clean source code or full file bundles instantly\n\nFree for local development. Pro sync is $9 a month.",
+    "keywords": "editor,typescript,developer,react,workbench,artifacts,prompt,assistant,sandbox,prototype",
+    "whats_new": "Initial release with live sandboxed React previews and multi-model support."
+  },
+  "google_play": {
+    "title": "Atelier: AI Artifact Studio",
+    "short_description": "Build and preview interactive code artifacts live with your own model keys.",
+    "full_description": "Atelier is a local-first workbench for developers and creators who build with AI.\n\nTurn prompts into working interactive prototypes. Inspect code side-by-side with a live React and HTML preview sandbox.\n\nKey Capabilities:\n- Interactive Artifacts: Live execution for React, Tailwind, and SVG components\n- Bring Your Own Key: Connect your preferred model providers with zero artificial rate limits\n- Multi-Model Freedom: Choose between high-intelligence reasoning and high-speed execution\n- Local-First Privacy: Keep your sessions and data stored securely on your device\n- One-Click Export: Download clean source code or full file bundles instantly\n\nFree for local development. Pro sync is $9 a month."
+  }
+}

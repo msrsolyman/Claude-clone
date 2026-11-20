@@ -1,0 +1,43 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+.pnp
+.pnp.js
+
+# Next.js build output
+.next/
+out/
+build/
+dist/
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Environment files
+.env*.local
+.env
+!.env.example
+
+# Editor and OS
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+.vscode/
+.idea/
+Thumbs.db
+
+# Turbopack & Caches
+.turbo
+*.tsbuildinfo
+next-env.d.ts
+
+# Optional runtime data
+# data/store.json is tracked if desired, or ignored if private
